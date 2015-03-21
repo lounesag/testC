@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
@@ -28,27 +29,25 @@ public class FirstTest {
 			System.out.println("\n 2- Post cretae person test");
 			try {
 
+				String emailpre = GenerateString.generateRandomString(10, GenerateString.Mode.ALPHA); 
+				String domain = GenerateString.generateRandomString(5, GenerateString.Mode.ALPHA);
+				String emailpost = GenerateString.generateRandomString(2, GenerateString.Mode.ALPHA); 
+				
+				String pseudoNameFirstNmae = GenerateString.generateRandomString(10, GenerateString.Mode.ALPHA);
+				String country = GenerateString.generateRandomString(5, GenerateString.Mode.ALPHA);
+				
 				Client client = Client.create();
 
 				WebResource webResource = client
-						.resource("http://localhost:8080/ColisDrive/person/save");
+						.resource("http://localhost:8080/testC/person/save");
 
-				String input = "{"
-						+ "\"name\":\"Metallica\","
-						+ "\"firstname\":\"Fade To Black\","
-						+ "\"adress\":\"testadress home hihi\","
-						+ "\"email\":\"me@me.fr\","
-						+ "\"birthday\":\"11-02-1990\","
-						+ "\"gender\":1,"
-						+ "\"country\":\"algeria\""
-						+ "}";
-				//	+ "\"phone\":\"0712345678\""
-
+				String input = "{\"firstname\":\""+pseudoNameFirstNmae+"\",\"name\":\""+pseudoNameFirstNmae+"\",\"country\":\""+country+"\",\"adress\":\"miami 34090 sefaze\",\"email\":\""+emailpre+"@"+domain+"."+emailpost+"\",\"birthday\":\"2012-06-06\",\"gender\":0,\"pseudo\":\""+pseudoNameFirstNmae+"\",\"phone\":\"0123456789\"}";
 				System.out.println(input);
+
 				ClientResponse response = webResource.type("application/json")
 						.post(ClientResponse.class, input);
 
-				if (response.getStatus() != 201) {
+				if (response.getStatus() != 200) {
 					throw new RuntimeException("Failed : HTTP error code : "
 							+ response.getStatus());
 				}
@@ -69,7 +68,7 @@ public class FirstTest {
 
 					Client client = Client.create();
 					WebResource webResource = client
-							.resource("http://localhost:8080/ColisDrive/person/listPersons");
+							.resource("http://localhost:8080/testC/person/listPersons");
 
 					ClientResponse response = webResource.accept("application/json")
 							.get(ClientResponse.class);
@@ -97,7 +96,7 @@ public class FirstTest {
 
 				Client client = Client.create();
 				WebResource webResource = client
-						.resource("http://localhost:8080/ColisDrive/person/get/1");
+						.resource("http://localhost:8080/testC/person/get/1");
 
 				ClientResponse response = webResource.accept("application/json")
 						.get(ClientResponse.class);
