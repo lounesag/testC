@@ -2,6 +2,7 @@ package com.service;
 
 import java.util.List;
 
+import com.exception.CustomException;
 import com.model.Person;
 
 public interface PersonService {
@@ -20,5 +21,7 @@ public interface PersonService {
      * DELETE
      */
     public void deletePerson(int id);
+    
+    public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException;
 
 }

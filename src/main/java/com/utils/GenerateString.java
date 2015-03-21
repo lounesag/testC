@@ -2,6 +2,8 @@ package com.utils;
 
 public class GenerateString {
 
+	public GenerateString (){}
+	
 	public static enum Mode {
 	    ALPHA, ALPHANUMERIC, NUMERIC 
 	}

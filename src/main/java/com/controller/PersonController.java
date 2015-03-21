@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.exception.CustomException;
 import com.model.Person;
 import com.service.PersonService;
 
@@ -49,16 +50,6 @@ public class PersonController {
          map.put("created", "success");
          return map;
      }
-     /*
-      * @POST
-		@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-		@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-		public Response createDog(JAXBElement<Dog> jaxbDog) {
-    	Dog dog = jaxbDog.getValue();
-   		dogDao.save(dog);
-    	return Response.status(Response.Status.OK).build();
-		}
-      */
 
      @RequestMapping("/delete/{personId}")
      @ResponseStatus(HttpStatus.OK)
@@ -69,4 +60,19 @@ public class PersonController {
          map.put("person", id);
          return map;
      }
+
+	 @RequestMapping(value = "/get/{personName}/{personFirstName}", method = RequestMethod.GET)
+     public @ResponseBody Map getPersonByNameAndFirstName(@PathVariable String personName, @PathVariable String personFirstName) throws CustomException {
+		 	Map<String, Object> map = new HashMap();
+            Person person;
+			try {
+				person = personService.getPersonByNameAndFirstName(personName, personFirstName);
+	            map.put("person", person);
+
+			} catch (CustomException e) {
+				throw new CustomException("Exception: ",e);
+			}
+            return map;
+     }
+     
 }

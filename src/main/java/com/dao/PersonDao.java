@@ -2,6 +2,7 @@ package com.dao;
 
 import java.util.List;
 
+import com.exception.CustomException;
 import com.model.Person;
 
 public interface PersonDao {
@@ -21,4 +22,7 @@ public interface PersonDao {
      * DELETE
      */
     public void deletePerson(int id);
+    
+	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException;
+
 }

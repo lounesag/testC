@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dao.PersonDao;
+import com.exception.CustomException;
 import com.model.Person;
 import com.service.PersonService;
 
@@ -34,6 +35,11 @@ public class PersonServiceImpl implements PersonService {
 	@Transactional
 	public void deletePerson(int id) {
 		personDao.deletePerson(id);
+	}
+	
+	@Transactional(readOnly=true)
+	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException{
+		return personDao.getPersonByNameAndFirstName(name, firstname);	
 	}
 
 }

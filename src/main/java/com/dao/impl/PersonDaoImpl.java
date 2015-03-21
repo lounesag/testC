@@ -2,12 +2,14 @@ package com.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dao.PersonDao;
+import com.exception.CustomException;
 import com.model.Person;
 
 @Repository
@@ -35,6 +37,21 @@ public class PersonDaoImpl implements PersonDao {
                 getSession().delete(person);
          }
 		
+	}
+
+	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException {
+		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.name = :name and t.firstname = :firstname");
+		query.setParameter("name", name);
+		query.setParameter("firstname", firstname);
+		
+		if (query.list().isEmpty()) {
+			return null;
+		} 
+		if (query.list().size()!=1){
+			throw new CustomException("there is not an unique person for name: "+name+" and firstname: "+firstname+" please see a DB !");
+		}
+		
+		return (Person) query.list().get(0);
 	}
 
 	private Session getSession() {
