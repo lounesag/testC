@@ -28,7 +28,7 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Transactional(readOnly = true)
-	public Person getPerson(int id) {
+	public Person getPerson(int id) throws CustomException {
 		return personDao.getPerson(id);
 	}
 

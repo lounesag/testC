@@ -15,7 +15,7 @@ public interface PersonService {
      * READ
      */
     public List<Person> listPersons();
-    public Person getPerson(int id);
+    public Person getPerson(int id) throws CustomException;
 
     /*
      * DELETE

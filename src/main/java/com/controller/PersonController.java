@@ -36,7 +36,7 @@ public class PersonController {
 	}
 
 	 @RequestMapping(value = "/get/{personId}", method = RequestMethod.GET)
-     public @ResponseBody Map getPerson(@PathVariable int personId) {
+     public @ResponseBody Map getPerson(@PathVariable int personId) throws CustomException {
 		 	Map<String, Object> map = new HashMap();
             Person person = personService.getPerson(personId);
             map.put("person", person);
@@ -62,7 +62,7 @@ public class PersonController {
      }
 
 	 @RequestMapping(value = "/get/{personName}/{personFirstName}", method = RequestMethod.GET)
-     public @ResponseBody Map getPersonByNameAndFirstName(@PathVariable String personName, @PathVariable String personFirstName) throws CustomException {
+     public @ResponseBody Map getPersonByNameAndFirstName(@PathVariable("personName") String personName, @PathVariable("personFirstName") String personFirstName) throws CustomException {
 		 	Map<String, Object> map = new HashMap();
             Person person;
 			try {
@@ -74,5 +74,32 @@ public class PersonController {
 			}
             return map;
      }
+
+	 @RequestMapping(value = "/update", method = RequestMethod.PUT)	 
+	 public @ResponseBody Map updatePerson(@RequestBody Person personNewAttrib ) throws CustomException {
+		 	Map<String, Object> map = new HashMap();
+		 	Person person;
+		 	try {
+	            person = personService.getPerson(personNewAttrib.getId());
+
+	            person.setAdress(personNewAttrib.getAdress());
+	            person.setBirthday(personNewAttrib.getBirthday());
+	            person.setCountry(personNewAttrib.getCountry());
+	            person.setEmail(person.getEmail());
+	            person.setFirstname(personNewAttrib.getFirstname());
+	            person.setGender(person.getGender());
+	            person.setName(person.getName());
+	            person.setPhone(personNewAttrib.getPhone());
+	            person.setPseudo(personNewAttrib.getPseudo());
+
+	            personService.savePerson(person);
+
+	            map.put("update", "success");
+
+			} catch (CustomException e) {
+				throw new CustomException("Exception: ",e);
+			}
+            return map;
+	 }
      
 }
