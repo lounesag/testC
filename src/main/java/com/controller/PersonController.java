@@ -3,11 +3,15 @@ package com.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,20 +20,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.exception.CustomException;
 import com.model.Person;
 import com.service.PersonService;
+import com.system.authentication.AuthenticationService;
+import com.system.authentication.TokenManager;
 
-@Controller
+@RestController
 @RequestMapping("/person")
 public class PersonController {
 
 	@Autowired
 	private PersonService personService;
+	
+	@Autowired
+	private AuthenticationService authenticationService;
 
-	@RequestMapping(value ="/listPersons", method = RequestMethod.GET)
+	@Autowired
+	private TokenManager tokenManager;
+
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value ="/secure/listPersons", method = RequestMethod.GET)
 	public @ResponseBody Map listPersons() {
+		UserDetails currentUser = authenticationService.currentUser();
+		System.out.println("----> current user : " + currentUser);
+//		tokenManager.getUserTokens(currentUser);
+//		tokenManager.get
 		Map<String, Object> map = new HashMap();
 		map.put("personList", personService.listPersons());
 		return map;
