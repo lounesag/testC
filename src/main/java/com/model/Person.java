@@ -62,7 +62,7 @@ public class Person {
 	@NotNull
 	@NotBlank
 	@Column(name="pseudo",unique=true)
-	private String pseudo;
+	private String pseudo; // should be hashed, but doesn't matter in our example
 
 	@NotNull
 	@NotBlank
