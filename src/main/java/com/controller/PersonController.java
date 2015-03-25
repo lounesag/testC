@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enumurations.RoleEnum;
 import com.exception.CustomException;
 import com.model.Person;
+import com.model.Role;
 import com.service.PersonService;
 import com.system.authentication.AuthenticationService;
 import com.system.authentication.TokenManager;
@@ -34,7 +36,7 @@ public class PersonController {
 
 	@Autowired
 	private PersonService personService;
-	
+
 	@Autowired
 	private AuthenticationService authenticationService;
 
@@ -46,79 +48,119 @@ public class PersonController {
 	@RequestMapping(value ="/secure/listPersons", method = RequestMethod.GET)
 	public @ResponseBody Map listPersons() {
 		UserDetails currentUser = authenticationService.currentUser();
-		System.out.println("----> current user : " + currentUser);
-//		tokenManager.getUserTokens(currentUser);
-//		tokenManager.get
+		System.out.println(currentUser);
 		Map<String, Object> map = new HashMap();
 		map.put("personList", personService.listPersons());
 		return map;
 	}
 
-	 @RequestMapping(value = "/get/{personId}", method = RequestMethod.GET)
-     public @ResponseBody Map getPerson(@PathVariable int personId) throws CustomException {
-		 	Map<String, Object> map = new HashMap();
-            Person person = personService.getPerson(personId);
-            map.put("person", person);
-            return map;
-     }
+	@RequestMapping(value = "/get/{personId}", method = RequestMethod.GET)
+	public @ResponseBody Map getPerson(@PathVariable int personId) throws CustomException {
+		Map<String, Object> map = new HashMap();
+		Person person = personService.getPerson(personId);
+		map.put("person", person);
+		return map;
+	}
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody Map savePerson(@RequestBody Person person) {
-    	 Map<String, Object> map = new HashMap();
-         personService.savePerson(person);
-         map.put("created", "success");
-         return map;
-     }
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public @ResponseBody Map savePerson(@RequestBody Person person) {
+		Map<String, Object> map = new HashMap();
+		personService.savePerson(person);
+		map.put("created", "success");
+		return map;
+	}
 
-     @RequestMapping("/delete/{personId}")
-     @ResponseStatus(HttpStatus.OK)
-     public @ResponseBody Map deletePerson(@PathVariable("personId") int id) {
-         Map<String, Object> map = new HashMap();   
-    	 personService.deletePerson(id);
-    	 map.put("delete", "success");
-         map.put("person", id);
-         return map;
-     }
+	@RequestMapping("/delete/{personId}")
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody Map deletePerson(@PathVariable("personId") int id) {
+		Map<String, Object> map = new HashMap();   
+		personService.deletePerson(id);
+		map.put("delete", "success");
+		map.put("person", id);
+		return map;
+	}
 
-	 @RequestMapping(value = "/get/{personName}/{personFirstName}", method = RequestMethod.GET)
-     public @ResponseBody Map getPersonByNameAndFirstName(@PathVariable("personName") String personName, @PathVariable("personFirstName") String personFirstName) throws CustomException {
-		 	Map<String, Object> map = new HashMap();
-            Person person;
-			try {
-				person = personService.getPersonByNameAndFirstName(personName, personFirstName);
-	            map.put("person", person);
+	@RequestMapping(value = "/get/{personName}/{personFirstName}", method = RequestMethod.GET)
+	public @ResponseBody Map getPersonByNameAndFirstName(@PathVariable("personName") String personName, @PathVariable("personFirstName") String personFirstName) throws CustomException {
+		Map<String, Object> map = new HashMap();
+		Person person;
+		try {
+			person = personService.getPersonByNameAndFirstName(personName, personFirstName);
+			map.put("person", person);
 
-			} catch (CustomException e) {
-				throw new CustomException("Exception: ",e);
+		} catch (CustomException e) {
+			throw new CustomException("Exception: ",e);
+		}
+		return map;
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)	 
+	public @ResponseBody Map updatePerson(@RequestBody Person personNewAttrib ) throws CustomException {
+		Map<String, Object> map = new HashMap();
+		Person person;
+		try {
+			person = personService.getPerson(personNewAttrib.getId());
+
+			person.setAdress(personNewAttrib.getAdress());
+			person.setBirthday(personNewAttrib.getBirthday());
+			person.setCountry(personNewAttrib.getCountry());
+			person.setEmail(person.getEmail());
+			person.setFirstname(personNewAttrib.getFirstname());
+			person.setGender(person.getGender());
+			person.setName(person.getName());
+			person.setPhone(personNewAttrib.getPhone());
+			person.setPseudo(personNewAttrib.getPseudo());
+
+			personService.savePerson(person);
+
+			map.put("update", "success");
+
+		} catch (CustomException e) {
+			throw new CustomException("Exception: ",e);
+		}
+		return map;
+	}
+
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/secure/update/authority", method = RequestMethod.POST)	 
+	public @ResponseBody Map updatePersonAuthority(@RequestBody Person personNewAuthority) throws CustomException {
+		Map<String, Object> map = new HashMap();
+		UserDetails currentUser = authenticationService.currentUser();
+		Person person = personService.getPerson(personNewAuthority.getId());
+		
+		if (person != null){
+			updateRolePerson(person, personNewAuthority);
+		} else {
+			throw new CustomException("person with id: "+personNewAuthority.getId()+" is not valid");
+		}
+		
+		map.put("update authority", "success");
+		return map;
+	}
+
+	private void updateRolePerson(Person person, Person personNewAuthority) throws CustomException{
+		try {
+			Role role = person.getRole();
+			Role roleNew = personNewAuthority.getRole();
+			String roleNewName = roleNew.getRoleName();
+			if (role!=null) {
+				switch (roleNewName) {
+				case "ADMIN":
+				case "USER_SIMPLE":
+				case "ROLE_SPECIAL":
+					person.setRole(roleNew);
+					break;
+
+				default:
+					throw new CustomException("Authority name invalid : "+roleNewName);
+				}
 			}
-            return map;
-     }
+			personService.savePerson(person);
 
-	 @RequestMapping(value = "/update", method = RequestMethod.PUT)	 
-	 public @ResponseBody Map updatePerson(@RequestBody Person personNewAttrib ) throws CustomException {
-		 	Map<String, Object> map = new HashMap();
-		 	Person person;
-		 	try {
-	            person = personService.getPerson(personNewAttrib.getId());
-
-	            person.setAdress(personNewAttrib.getAdress());
-	            person.setBirthday(personNewAttrib.getBirthday());
-	            person.setCountry(personNewAttrib.getCountry());
-	            person.setEmail(person.getEmail());
-	            person.setFirstname(personNewAttrib.getFirstname());
-	            person.setGender(person.getGender());
-	            person.setName(person.getName());
-	            person.setPhone(personNewAttrib.getPhone());
-	            person.setPseudo(personNewAttrib.getPseudo());
-
-	            personService.savePerson(person);
-
-	            map.put("update", "success");
-
-			} catch (CustomException e) {
-				throw new CustomException("Exception: ",e);
-			}
-            return map;
-	 }
-     
+		} catch (CustomException e) {
+			throw new CustomException("Exception: ",e);
+		}
+	}
+	
 }

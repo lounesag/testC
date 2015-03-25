@@ -3,11 +3,14 @@ package com.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -70,7 +73,10 @@ public class Person {
 	private String phone;
 
 	private boolean active = true;
-	
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private Role role = new Role();
+
 	public Person () {
 		this.createdDate = new Date();
 	}
@@ -154,6 +160,14 @@ public class Person {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 }
