@@ -66,4 +66,15 @@ public class PersonDaoImpl implements PersonDao {
 		return sessionFactory;
 	}
 
+	@Override
+	public Person getByLogin(String login) {
+		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.login = :login");
+		query.setParameter("login", login);
+
+		if (query.list().isEmpty()) {
+			return null;
+		} 
+		return (Person) query.list().get(0);
+	}
+
 }

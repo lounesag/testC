@@ -8,22 +8,26 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.model.Person;
+import com.model.Role;
 import com.model.User;
 
 /** This object wraps {@link User} and makes it {@link UserDetails} so that Spring Security can use it. */
 public class UserContext implements UserDetails {
 
-	private User user;
+	private Person user;
 
-	public UserContext(User user) {
+	public UserContext(Person user) {
 		this.user = user;
 	}
 
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList();
-		for (String role : user.getRoles()) {
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
+//		for (String role : user.getRoles()) {
+//			authorities.add(new SimpleGrantedAuthority(role));
+//		}
+		Role role = user.getRole();
+		authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
 		return authorities;
 	}
 

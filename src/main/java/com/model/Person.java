@@ -64,11 +64,6 @@ public class Person {
 
 	@NotNull
 	@NotBlank
-	@Column(name="pseudo",unique=true)
-	private String pseudo; // should be hashed, but doesn't matter in our example
-
-	@NotNull
-	@NotBlank
 	@Phone
 	private String phone;
 
@@ -76,6 +71,15 @@ public class Person {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Role role = new Role();
+
+	@NotBlank
+	@NotNull
+	@Column(name="login",unique=true)
+	private String login;
+
+	@NotBlank
+	@NotNull
+	private String password;
 
 	public Person () {
 		this.createdDate = new Date();
@@ -138,14 +142,6 @@ public class Person {
 		this.birthday = birthday;
 	}
 
-	public String getPseudo() {
-		return pseudo;
-	}
-
-	public void setPseudo(String pseudo) {
-		this.pseudo = pseudo;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -168,6 +164,22 @@ public class Person {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

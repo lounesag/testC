@@ -109,7 +109,7 @@ public class PersonController {
 			person.setGender(person.getGender());
 			person.setName(person.getName());
 			person.setPhone(personNewAttrib.getPhone());
-			person.setPseudo(personNewAttrib.getPseudo());
+			person.setLogin(personNewAttrib.getLogin());
 
 			personService.savePerson(person);
 

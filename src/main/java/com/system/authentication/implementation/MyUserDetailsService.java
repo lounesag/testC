@@ -5,8 +5,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.dao.PersonDao;
 import com.dao.impl.UserDao;
+import com.model.Person;
 import com.model.User;
 
 /**
@@ -16,7 +19,7 @@ import com.model.User;
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UserDao userDao;
+	private PersonDao userDao;
 
 	/**
 	 * This will be called from
@@ -25,11 +28,12 @@ public class MyUserDetailsService implements UserDetailsService {
 	 * {@link AuthenticationManager#authenticate(org.springframework.security.core.Authentication)}. Easy.
 	 */
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		System.out.println(" *** MyUseDetailService.loadUserByUsername");
-		User user = userDao.getByLogin(username);
+		Person user = userDao.getByLogin(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("User " + username + " not found");
+			throw new UsernameNotFoundException("User not found");
 		}
 		return new UserContext(user);
 	}

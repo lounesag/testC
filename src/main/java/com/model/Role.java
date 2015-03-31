@@ -19,9 +19,11 @@ public class Role {
 	private int id;
 
 	@Column
-	private String roleName = RoleEnum.USER_SIMPLE.getValue(); //TODO enum roles ... 
+	private String roleName ; //TODO enum roles ... 
 
-	public Role(){}
+	public Role(){
+		this.roleName = RoleEnum.USER_SIMPLE.getValue();
+	}
 
 	public int getId() {
 		return id;
