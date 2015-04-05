@@ -74,7 +74,7 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	@Override
-	public Person getByLogin(String login) throws CustomException {
+	public Person getPersonByLogin(String login) throws CustomException {
 		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.login = :login");
 		query.setParameter("login", login);
 
@@ -84,6 +84,22 @@ public class PersonDaoImpl implements PersonDao {
 
 		if (query.list().size()!=1){
 			throw new CustomException("there is not an unique person for login: "+login+"  please see a DB !");
+		}
+
+		return (Person) query.list().get(0);
+	}
+
+	@Override
+	public Person getPersonByEmail(String email) throws CustomException {
+		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.email = :email");
+		query.setParameter("email", email);
+
+		if (query.list().isEmpty()) {
+			return null;
+		}
+
+		if (query.list().size()!=1){
+			throw new CustomException("there is not an unique person for email: "+email+"  please see a DB !");
 		}
 
 		return (Person) query.list().get(0);

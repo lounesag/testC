@@ -44,7 +44,13 @@ public class PersonServiceImpl implements PersonService {
 
 	@Transactional
 	public Person getByLogin(String login) throws CustomException {
-		return personDao.getByLogin(login);
+		return personDao.getPersonByLogin(login);
 	}
+
+	@Override
+	public Person getPersonByEmail(String email) throws CustomException {
+		return personDao.getPersonByEmail(email);
+	}
+
 
 }

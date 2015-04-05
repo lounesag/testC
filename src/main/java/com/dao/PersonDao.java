@@ -25,5 +25,8 @@ public interface PersonDao {
     
 	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException;
 
-	public Person getByLogin(String login) throws CustomException;
+	public Person getPersonByLogin(String login) throws CustomException;
+
+	public Person getPersonByEmail(String email) throws CustomException;
+
 }

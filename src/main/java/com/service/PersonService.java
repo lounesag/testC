@@ -26,6 +26,8 @@ public interface PersonService {
 
 	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException;
 
-	@Transactional
 	public Person getByLogin(String login) throws CustomException;
+
+	public Person getPersonByEmail(String email) throws CustomException;
+
 }

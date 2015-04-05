@@ -34,7 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		System.out.println(" *** MyUseDetailService.loadUserByUsername");
 		Person user;
 		try {
-			user = userDao.getByLogin(username);
+			user = userDao.getPersonByLogin(username);
 		} catch (CustomException e) {
 			throw new UsernameNotFoundException("User not found",e);
 		}

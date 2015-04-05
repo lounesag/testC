@@ -53,7 +53,7 @@ public class ColisServiceImpl implements ColisService{
 	public void setColisService (UserDetails currentUser, Colis colis ) throws CustomException{
 		System.out.println("current user : ------> "+currentUser);
 
-		Person person = personDao.getByLogin(currentUser.getUsername());
+		Person person = personDao.getPersonByLogin(currentUser.getUsername());
 		
 		Set<Person> ListePersone = new HashSet<Person>();
 		
