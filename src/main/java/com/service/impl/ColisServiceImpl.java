@@ -60,7 +60,7 @@ public class ColisServiceImpl implements ColisService{
 		ListePersone.add(person);
 
 		Colis colisNew = new Colis();
-		colisNew.setColisNumero(colis.getColisNumero());
+		colisNew.setColisNumber(colis.getColisNumber());
 		colisNew.setComment(colis.getComment());
 		colisNew.setCreatedBy(person.getId());
 		colisNew.setDescription(colis.getDescription());

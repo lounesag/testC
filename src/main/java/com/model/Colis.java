@@ -3,6 +3,7 @@ package com.model;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,8 +27,8 @@ public class Colis {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	
-	private String colisNumero; // format XXXX-XXXX-XXXX-XXXX
+
+	private String colisNumber; // format XXXX-XXXX-XXXX-XXXX
 
 	@NotNull
 	@NotBlank
@@ -59,16 +60,19 @@ public class Colis {
 
 	private int createdBy;
 
+	private boolean active = true;
+
 	public Colis() {
 		this.createdDate = new Date() ;
+		this.colisNumber = UUID.randomUUID().toString();
 	}
 
-	public String getColisNumero() {
-		return colisNumero;
+	public String getColisNumber() {
+		return colisNumber;
 	}
 
-	public void setColisNumero(String colisNumero) {
-		this.colisNumero = colisNumero;
+	public void setColisNumber(String colisNumero) {
+		this.colisNumber = colisNumero;
 	}
 
 	public String getName() {
@@ -170,4 +174,12 @@ public class Colis {
 		return MAX_PERSON_COLIS;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
 }
