@@ -42,4 +42,9 @@ public class PersonServiceImpl implements PersonService {
 		return personDao.getPersonByNameAndFirstName(name, firstname);	
 	}
 
+	@Transactional
+	public Person getByLogin(String login) throws CustomException {
+		return personDao.getByLogin(login);
+	}
+
 }

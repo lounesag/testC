@@ -27,30 +27,37 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	public Person getPerson(int id) {
-        return (Person) getSession().get(Person.class, id);
+		Query query = sessionFactory.getCurrentSession().createQuery("from Person p where p.id = :id");
+		query.setParameter("id", id);
+
+		if (query.list().isEmpty()) {
+			return null;
+		}
+
+		return (Person) query.list().get(0);
 	}
 
 	public void deletePerson(int id) {
-		 Person person = getPerson(id);
+		Person person = getPerson(id);
 
-         if (null != person) {
-                getSession().delete(person);
-         }
-		
+		if (null != person) {
+			getSession().delete(person);
+		}
+
 	}
 
 	public Person getPersonByNameAndFirstName(String name, String firstname) throws CustomException {
 		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.name = :name and t.firstname = :firstname");
 		query.setParameter("name", name);
 		query.setParameter("firstname", firstname);
-		
+
 		if (query.list().isEmpty()) {
 			return null;
 		} 
 		if (query.list().size()!=1){
 			throw new CustomException("there is not an unique person for name: "+name+" and firstname: "+firstname+" please see a DB !");
 		}
-		
+
 		return (Person) query.list().get(0);
 	}
 
@@ -67,13 +74,18 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	@Override
-	public Person getByLogin(String login) {
+	public Person getByLogin(String login) throws CustomException {
 		Query query = sessionFactory.getCurrentSession().createQuery("from Person t where t.login = :login");
 		query.setParameter("login", login);
 
 		if (query.list().isEmpty()) {
 			return null;
-		} 
+		}
+
+		if (query.list().size()!=1){
+			throw new CustomException("there is not an unique person for login: "+login+"  please see a DB !");
+		}
+
 		return (Person) query.list().get(0);
 	}
 

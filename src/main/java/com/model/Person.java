@@ -2,6 +2,8 @@ package com.model;
 
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -22,6 +26,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.annotations.Phone;
 import com.enumurations.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.JoinColumn;
 
 
 @Entity
@@ -29,7 +36,6 @@ import com.enumurations.Gender;
 public class Person {
 
 	@Id
-	@Column(name = "id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
@@ -80,6 +86,14 @@ public class Person {
 	@NotBlank
 	@NotNull
 	private String password;
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE },fetch = FetchType.LAZY) 
+	@JoinTable(name = "Person_Colis", 
+	          joinColumns = { @JoinColumn(name = "person_id") },
+	          inverseJoinColumns = { @JoinColumn(name = "colis_id") })
+	@JsonIgnore
+	private Set<Colis> colisListe = new HashSet<Colis>();
+
 
 	public Person () {
 		this.createdDate = new Date();
@@ -180,6 +194,14 @@ public class Person {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Set<Colis> getColisListe() {
+		return colisListe;
+	}
+
+	public void setColisListe(Set<Colis> colisListe) {
+		this.colisListe = colisListe;
 	}
 
 }

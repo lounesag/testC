@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dao.PersonDao;
 import com.dao.impl.UserDao;
+import com.exception.CustomException;
 import com.model.Person;
 import com.model.User;
 
@@ -31,9 +32,11 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		System.out.println(" *** MyUseDetailService.loadUserByUsername");
-		Person user = userDao.getByLogin(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User not found");
+		Person user;
+		try {
+			user = userDao.getByLogin(username);
+		} catch (CustomException e) {
+			throw new UsernameNotFoundException("User not found",e);
 		}
 		return new UserContext(user);
 	}

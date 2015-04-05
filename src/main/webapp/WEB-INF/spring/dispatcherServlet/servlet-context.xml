@@ -32,7 +32,7 @@
 		p:prefix="/WEB-INF/view/" p:suffix=".jsp"/>
 
 
-<!--     Configure to plugin JSON as request and response in method handler -->
+ <!--     Configure to plugin JSON as request and response in method handler -->
 <!--     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"> -->
 <!--         <property name="messageConverters"> -->
 <!--             <list> -->

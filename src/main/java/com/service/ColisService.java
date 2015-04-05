@@ -2,6 +2,9 @@ package com.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.exception.CustomException;
 import com.model.Colis;
 
 public interface ColisService {
@@ -22,4 +25,7 @@ public interface ColisService {
      * DELETE
      */
     public void deleteColis(int id);
+   
+    public void setColisService(UserDetails currentUser, Colis colis ) throws CustomException;
+
 }

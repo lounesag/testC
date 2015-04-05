@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,13 +17,13 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.exception.CustomException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name ="Colis")
 public class Colis {
 
 	@Id
-	@Column(name = "colis_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
@@ -51,8 +51,13 @@ public class Colis {
 
 	final static int MAX_PERSON_COLIS = 3;
 
-//	@ManyToMany(mappedBy="colisL")
-//	private Set<Person> persons = new HashSet<Person>(MAX_PERSON_COLIS);
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+			mappedBy="colisListe",
+			fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<Person> persons = new HashSet<Person>(0);
+
+	private int createdBy;
 
 	public Colis() {
 		this.createdDate = new Date() ;
@@ -142,15 +147,27 @@ public class Colis {
 		return id;
 	}
 
-//	public Set<Person> getPersons() throws CustomException {
-//		if (persons.size()>MAX_PERSON_COLIS) {
-//			throw new CustomException("Max persons by colis is not valid "+ persons.size());
-//		}
-//		return persons;
-//	}
-//
-//	public void setPersons(Set<Person> persons) {
-//		this.persons = persons;
-//	}
+	public Set<Person> getPersons() throws CustomException {
+		if (persons.size()>MAX_PERSON_COLIS) {
+			throw new CustomException("Max persons by colis is not valid "+ persons.size());
+		}
+		return persons;
+	}
+
+	public void setPersons(Set<Person> persons) {
+		this.persons = persons;
+	}
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public static int getMaxPersonColis() {
+		return MAX_PERSON_COLIS;
+	}
 
 }
