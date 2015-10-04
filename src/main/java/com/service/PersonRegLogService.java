@@ -9,7 +9,7 @@ public interface PersonRegLogService {
 	/*
 	 * CREATE and UPDATE
 	 */
-	public void savePersonRegLog(LogsForPerson personRegLog) throws Exception;
+	public void savePersonRegLog(LogsForPerson personRegLog) throws CustomException;
 
 	/*
 		 * READ

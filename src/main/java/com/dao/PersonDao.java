@@ -2,6 +2,8 @@ package com.dao;
 
 import java.util.List;
 
+import org.hibernate.exception.DataException;
+
 import com.exception.CustomException;
 import com.model.Person;
 
@@ -10,7 +12,7 @@ public interface PersonDao {
 	 /*
      * CREATE and UPDATE
      */
-    public void savePerson(Person person); // create and update
+    public void savePerson(Person person) throws CustomException, DataException; // create and update
 
     /*
      * READ

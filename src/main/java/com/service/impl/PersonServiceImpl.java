@@ -18,8 +18,14 @@ public class PersonServiceImpl implements PersonService {
 	private PersonDao personDao;
 
 	@Transactional
-	public void savePerson(Person person) {
-		personDao.savePerson(person);
+	public void savePerson(Person person) throws CustomException {
+			try {
+				personDao.savePerson(person);
+				System.out.println("coucou jsui la 2");
+			} catch(Exception e) {
+				throw new CustomException("email, or login duplicate",e);
+			}
+		
 	}
 
 	@Transactional(readOnly = true)

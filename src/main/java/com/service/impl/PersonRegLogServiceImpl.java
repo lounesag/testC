@@ -18,7 +18,7 @@ public class PersonRegLogServiceImpl implements PersonRegLogService {
 	private PersonRegLogDao personRegLogDao;
 	
 	@Transactional
-	public void savePersonRegLog(LogsForPerson personRegLog) throws Exception {
+	public void savePersonRegLog(LogsForPerson personRegLog) throws CustomException {
 					personRegLogDao.savePersonRegLog(personRegLog);			
 		}
 

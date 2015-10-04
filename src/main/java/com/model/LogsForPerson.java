@@ -19,6 +19,7 @@ public class LogsForPerson {
 
 	private String request;
 
+	@Column(name = "response", length = 2048)
 	private String response;
 
 	@Column(name = "server_ip", length = 128)

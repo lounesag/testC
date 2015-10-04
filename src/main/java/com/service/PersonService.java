@@ -11,7 +11,7 @@ public interface PersonService {
 	/*
 	 * CREATE and UPDATE
 	 */
-	public void savePerson(Person book);
+	public void savePerson(Person person) throws CustomException;
 
 	/*
 	 * READ

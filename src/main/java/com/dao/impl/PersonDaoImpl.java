@@ -2,9 +2,11 @@ package com.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +20,15 @@ public class PersonDaoImpl implements PersonDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public void savePerson(Person person) {
-		getSession().merge(person);
+	public void savePerson(Person person) throws CustomException, HibernateException {
+		try {
+			getSession().merge(person);
+		} catch(Exception e) {
+			//getSession()).rollback();
+			System.out.println("coucou jsui la 1");
+			getSession().clear();
+			throw new CustomException("email, or login duplicate",e);   
+		}
 	}
 
 	public List<Person> listPersons() {
